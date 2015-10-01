@@ -9,6 +9,13 @@ define wordpress::instance::db (
   validate_bool($create_db,$create_db_user)
   validate_string($db_name,$db_host,$db_user,$db_password)
 
+  ## Installs MYSQL instance with correct bindings
+  class { 'mysql::server': } ->
+  class { 'mysql::client': } ->
+  class { 'mysql::bindings':
+    php_enable => true
+  }
+
   ## Set up DB using puppetlabs-mysql defined type
   if $create_db {
     mysql_database { "${db_host}/${db_name}":

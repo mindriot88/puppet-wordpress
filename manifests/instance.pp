@@ -66,22 +66,18 @@
 # [*wp_site_domain*]
 #   Specifies the `DOMAIN_CURRENT_SITE` value that will be used when configuring multisite. Typically this is the address of the main wordpress instance.  Default: ''
 #
-# === Requires
-#
-# === Examples
-#
 define wordpress::instance (
   $db_name,
   $db_user,
   $install_dir          = $title,
   $install_url          = 'http://wordpress.org',
-  $version              = '3.8',
+  $version              = '4.3.1',
   $create_db            = true,
   $create_db_user       = true,
   $db_host              = 'localhost',
-  $db_password          = 'password',
-  $wp_owner             = 'root',
-  $wp_group             = '0',
+  $db_password,
+  $wp_owner,
+  $wp_group,
   $wp_lang              = '',
   $wp_config_content    = undef,
   $wp_plugin_dir        = 'DEFAULT',

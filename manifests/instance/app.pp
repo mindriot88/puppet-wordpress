@@ -41,6 +41,32 @@ define wordpress::instance::app (
     fail('wordpress class requires `wp_debug` parameter to be true, when `wp_debug_display` is true')
   }
 
+  ## Building the Apache vhost and modules required for wordpress
+  class { 'apache':
+	default_vhost => false,
+	mpm_module => 'prefork',
+  } 
+
+  apache::vhost { $wp_site_domain:
+	port          => '80',
+	docroot       => $install_dir,
+	docroot_owner => $wp_owner,
+	docroot_group => $wp_group,
+	php_values    => { upload_max_filesize => '20M' },
+	override      => [ 'FileInfo' ],
+  }
+
+  class { 'php':
+        dev => false,
+        fpm => false,
+        extensions => { memcached => { settings => { "session.save_handler" => memcache, "session.save_path" => "tcp://localhost:11211" } }, curl => {}, tidy => {},};
+   }
+
+  class { 'apache::mod::php': }
+  class { 'apache::mod::rewrite': }
+  class { 'apache::mod::headers': }
+  class { 'apache::mod::expires': }
+
   ## Resource defaults
   File {
     owner  => $wp_owner,
@@ -116,8 +142,20 @@ define wordpress::instance::app (
     concat::fragment { "${install_dir}/wp-config.php keysalts":
       target  => "${install_dir}/wp-config.php",
       source  => "${install_dir}/wp-keysalts.php",
-      order   => '10',
+      order   => '15',
       require => File["${install_dir}/wp-keysalts.php"],
+    }
+    concat::fragment { "${install_dir}/wp-config.php w3-cache":
+      target  => "${install_dir}/wp-config.php",
+      content => template('wordpress/wp-w3-cache.php.erb'),
+      order   => '14',
+      require => Exec["Extract wordpress ${install_dir}"],
+    }
+    concat::fragment { "${install_dir}/wp-config.php config-header":
+      target  => "${install_dir}/wp-config.php",
+      content => template('wordpress/wp-config-header.php.erb'),
+      order   => '10',
+      require => Exec["Extract wordpress ${install_dir}"],
     }
     # Template uses:
     # - $db_name

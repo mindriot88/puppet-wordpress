@@ -77,14 +77,10 @@
 # [*wp_debug_display*]
 #   Specifies the `WP_DEBUG_DISPLAY` value that extends debugging to cause debug messages to be shown inline, in HTML pages. Default: 'false'
 #
-# === Requires
-#
-# === Examples
-#
 class wordpress (
   $install_dir          = '/opt/wordpress',
   $install_url          = 'http://wordpress.org',
-  $version              = '3.8',
+  $version              = '4.3.1',
   $create_db            = true,
   $create_db_user       = true,
   $db_name              = 'wordpress',
