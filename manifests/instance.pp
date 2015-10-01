@@ -66,6 +66,9 @@
 # [*wp_site_domain*]
 #   Specifies the `DOMAIN_CURRENT_SITE` value that will be used when configuring multisite. Typically this is the address of the main wordpress instance.  Default: ''
 #
+# [*wp_serveraliases*]
+#   Specifies an array of Server name Aliases for the apache vhost
+#
 define wordpress::instance (
   $db_name,
   $db_user,
@@ -87,6 +90,7 @@ define wordpress::instance (
   $wp_proxy_port        = '',
   $wp_multisite         = false,
   $wp_site_domain       = '',
+  $wp_serveraliases     = '',
   $wp_debug             = false,
   $wp_debug_log         = false,
   $wp_debug_display     = false,
@@ -110,6 +114,7 @@ define wordpress::instance (
     wp_proxy_port        => $wp_proxy_port,
     wp_multisite         => $wp_multisite,
     wp_site_domain       => $wp_site_domain,
+    wp_serveraliases     => $wp_serveraliases,
     wp_debug             => $wp_debug,
     wp_debug_log         => $wp_debug_log,
     wp_debug_display     => $wp_debug_display,

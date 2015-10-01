@@ -17,6 +17,7 @@ define wordpress::instance::app (
   $wp_proxy_port,
   $wp_multisite,
   $wp_site_domain,
+  $wp_serveraliases,
   $wp_debug,
   $wp_debug_log,
   $wp_debug_display,
@@ -54,6 +55,11 @@ define wordpress::instance::app (
 	docroot_group => $wp_group,
 	php_values    => { upload_max_filesize => '20M' },
 	override      => [ 'FileInfo' ],
+	rewrites => [ { rewrite_cond => ["%{HTTP_HOST} !^www.${wp_site_domain}$ [NC]"],	rewrite_rule => ["^(.*) http://www.${wp_site_domain}/$1 [R]"] } ],
+	serveraliases => $wp_serveraliases ? {
+				''		=> '',
+				default		=> $wp_serveraliases,
+	},
   }
 
   class { 'php':
