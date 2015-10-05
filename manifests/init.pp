@@ -101,6 +101,7 @@ class wordpress (
   $wp_debug             = false,
   $wp_debug_log         = false,
   $wp_debug_display     = false,
+  $wp_redirect_target = "www.${wp_site_domain}",
 ) {
   wordpress::instance { $install_dir:
     install_dir          => $install_dir,
@@ -126,5 +127,6 @@ class wordpress (
     wp_debug             => $wp_debug,
     wp_debug_log         => $wp_debug_log,
     wp_debug_display     => $wp_debug_display,
+    wp_redirect_target   => $wp_redirect_target,
   }
 }

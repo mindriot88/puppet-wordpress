@@ -94,6 +94,7 @@ define wordpress::instance (
   $wp_debug             = false,
   $wp_debug_log         = false,
   $wp_debug_display     = false,
+  $wp_redirect_target = "www.${wp_site_domain}",
 ) {
   wordpress::instance::app { $install_dir:
     install_dir          => $install_dir,
@@ -118,6 +119,7 @@ define wordpress::instance (
     wp_debug             => $wp_debug,
     wp_debug_log         => $wp_debug_log,
     wp_debug_display     => $wp_debug_display,
+    wp_redirect_target   => $wp_redirect_target,
   }
 
   wordpress::instance::db { "${db_host}/${db_name}":

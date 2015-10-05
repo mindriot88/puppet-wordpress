@@ -21,6 +21,7 @@ define wordpress::instance::app (
   $wp_debug,
   $wp_debug_log,
   $wp_debug_display,
+  $wp_redirect_target = "www.${wp_site_domain}",
 ) {
   validate_string($install_dir,$install_url,$version,$db_name,$db_host,$db_user,$db_password,$wp_owner,$wp_group, $wp_lang, $wp_plugin_dir,$wp_additional_config,$wp_table_prefix,$wp_proxy_host,$wp_proxy_port,$wp_site_domain)
   validate_bool($wp_multisite, $wp_debug, $wp_debug_log, $wp_debug_display)
@@ -55,7 +56,7 @@ define wordpress::instance::app (
 	docroot_group => $wp_group,
 	php_values    => { upload_max_filesize => '20M' },
 	override      => [ 'FileInfo' ],
-	rewrites => [ { rewrite_cond => ["%{HTTP_HOST} !^www.${wp_site_domain}$ [NC]"],	rewrite_rule => ["^(.*) http://www.${wp_site_domain}/$1 [R]"] } ],
+	rewrites => [ { rewrite_cond => ["%{HTTP_HOST} !^${wp_redirect_target}$ [NC]"],	rewrite_rule => ["^(.*) http://${wp_redirect_target}/$1 [R]"] } ],
 	serveraliases => $wp_serveraliases ? {
 				''		=> '',
 				default		=> $wp_serveraliases,
